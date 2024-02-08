@@ -23,11 +23,9 @@
                 "properties": {
                     "name": {
                         "type": "string",
-                        "default": "",
-                        "title": "The name of the plugin.",
-                        "examples": [
-                            "DBA"
-                        ]
+                        "enum": ["dba"],
+                        "default": "dba",
+                        "title": "The name of the plugin."
                     },
                     "search_term": {
                         "type": "string",
@@ -71,7 +69,7 @@
         },
         "interval": {
             "type": "integer",
-            "default": "",
+            "default": "60",
             "title": "The amount of seconds to wait between each run.",
             "examples": [
                 "60"
