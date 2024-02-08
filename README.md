@@ -3,6 +3,7 @@ This is a simple script that notifies you when a new item is added to a search t
 Name | URL
 --- | ---
 Den Blå Avis | https://dba.dk
+eBay | https://ebay.com
 
 It uses the [Discord Webhook API](https://discord.com/developers/docs/resources/webhook) to send a message to a channel of your choice.
 
@@ -31,6 +32,7 @@ The `config.json` file contains the following fields:
 Each plugin has the following fields:
 - `name`: The name of the plugin. This can be one of the following:
   - [`dba`](#dba)
+  - [`ebay`](#ebay)
 - `search_url`: The URL of the search query you want to monitor. Plugin specific.
 - `webhook_url`: The URL of the Discord Webhook you want to send the message to.
 - `message_content`: The message you want to be sent to the Discord channel alongside the listings. 
