@@ -4,8 +4,10 @@ import json
 import aiofiles
 from aiofiles import os
 from aiohttp import ClientSession
+from dataclasses_json import dataclass_json
 
 
+@dataclass_json
 @dataclass
 class MarketplaceListing:
     name: str
@@ -35,12 +37,13 @@ class MarketplacePlugin:
         file_name = f"listing_data/{self.name}{self.search_term}.json"
         if await os.path.isfile(file_name):
             async with aiofiles.open(file_name, mode="r") as f:
-                return json.parse(await f.read())
+                body = await f.read()
+                return MarketplaceListing.schema().loads(body, many=True)
         else:
             return []
-        
+
     async def save_listings(self, listings: list[MarketplaceListing]) -> None:
         """Saves the provided MarketplaceItems as processed."""
         file_name = f"listing_data/{self.name}{self.search_term}.json"
         async with aiofiles.open(file_name, mode="w") as f:
-            await f.write(json.dumps(listings))
+            await f.write(MarketplaceListing.schema().dumps(listings, many=True))

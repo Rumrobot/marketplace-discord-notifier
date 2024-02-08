@@ -14,7 +14,9 @@ class Plugin(MarketplacePlugin):
     async def fetch_listings(self):
         existing_listings = await self.get_saved_listings()
         try:
-            response = await self.session.get(f"https://www.dba.dk/soeg/?soeg={self.search_term}")
+            response = await self.session.get(
+                f"https://www.dba.dk/soeg/?soeg={self.search_term}"
+            )
         except Exception as e:
             print(f"[{self.name}] Error when requesting DBA site: {e}")
             return
@@ -26,10 +28,11 @@ class Plugin(MarketplacePlugin):
 
         listings = []
         for script in scripts:
-            text = html.unescape(html.unescape(script.string))
+            text = html.unescape(html.unescape(script.string)).replace("\n", "")
             try:
                 json_data = json.loads(text)
             except json.JSONDecodeError as e:
+                print(text)
                 print(f"[{self.name}] Error decoding JSON: {e}")
 
             name = json_data.get("name")
@@ -38,7 +41,9 @@ class Plugin(MarketplacePlugin):
             price = json_data.get("offers", {}).get("price")
 
             if url not in [listing.url for listing in existing_listings]:
-                listings.append(MarketplaceListing(name, image_url, url, f"{int(price):,d} kr"))
+                listings.append(
+                    MarketplaceListing(name, image_url, url, f"{int(price):,d} kr")
+                )
 
         await self.save_listings(existing_listings + listings)
-        return listings # The new ones
+        return listings  # The new ones

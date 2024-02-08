@@ -10,13 +10,13 @@ from aiohttp import ClientSession
 from jsonschema import ValidationError, validate
 
 from plugins.common import MarketplacePlugin
+from utils import batched
 
 
 async def main():
     with suppress(FileExistsError):
         await os.mkdir("listing_data")
 
-    main_loop = True
     async with ClientSession(
         headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 6.2; x64; en-US) AppleWebKit/602.9 (KHTML, like Gecko) Chrome/55.0.3782.249 Safari/600"
@@ -38,7 +38,7 @@ async def main():
         except ValidationError as e:
             return print(f"Configuration is invalid.\n{e.message}")
 
-        while main_loop:
+        while True:
             for plugin_config in config["plugins"]:
                 try:
                     plugin_module = importlib.import_module(
@@ -54,10 +54,10 @@ async def main():
                     print(f"Error loading plugin class: {e}")
                 listings = await plugin.fetch_listings()
                 if not listings:
-                    return
+                    continue
 
-                for batch in zip_longest(
-                    *[listings] * 10, fillvalue=None
+                for i, batch in enumerate(
+                    batched(listings, 10)
                 ):  # Group new listings into chunks of 10 (max embeds in one message)
                     embeds = []
                     for listing in batch:
@@ -66,26 +66,24 @@ async def main():
                                 "color": plugin.color,
                                 "title": listing.name,
                                 "url": listing.url,
-                                "fields": [
-                                    {"name": "Price", "value": listing.price}
-                                ],
+                                "fields": [{"name": "Price", "value": listing.price}],
                                 "image": {"url": listing.image_url},
                             }
                         )
                     body = {
-                        "content": plugin_config.get("message_content"),
+                        "content": (
+                            plugin_config.get("message_content") if i == 0 else None
+                        ),
                         "embeds": embeds,
                     }
                     try:
-                        await session.post(
-                            plugin_config["webhook_url"], json=body
+                        await session.post(plugin_config["webhook_url"], json=body)
+                        print(
+                            f"[{plugin.name}] Sent message with {len(batch)} new listings."
                         )
-                        print(f"[{plugin.name}] Sent message with {len(batch)} new listings.")
                     except Exception as e:
                         print(f"[{plugin.name}] Error while sending message: {e}")
                         return
-
-
 
             await asyncio.sleep(config["interval"])
 
