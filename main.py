@@ -11,7 +11,7 @@ from plugins.common import MarketplacePlugin
 
 
 async def main():
-    rmdir("listing_data")
+    await rmdir("listing_data")
 
     main_loop = True
     async with ClientSession(
