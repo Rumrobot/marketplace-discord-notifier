@@ -9,10 +9,12 @@ certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
 colorama==0.4.6
+dataclasses-json==0.6.4
 frozenlist==1.4.1
 idna==3.6
 jsonschema==4.21.1
 jsonschema-specifications==2023.12.1
+marshmallow==3.20.2
 multidict==6.0.5
 mypy-extensions==1.0.0
 packaging==23.2
@@ -22,5 +24,7 @@ python-dotenv==1.0.1
 referencing==0.33.0
 rpds-py==0.17.1
 soupsieve==2.5
+typing-inspect==0.9.0
+typing_extensions==4.9.0
 urllib3==2.2.0
 yarl==1.9.4
