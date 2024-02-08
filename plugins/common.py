@@ -1,6 +1,7 @@
 from base64 import b64encode
 from dataclasses import dataclass
 import json
+import re
 import aiofiles
 from aiofiles import os
 from aiohttp import ClientSession
@@ -34,7 +35,8 @@ class MarketplacePlugin:
 
     async def get_saved_listings(self) -> list[MarketplaceListing]:
         """Returns a list of processed listings."""
-        file_name = f"listing_data/{self.name}{self.search_term}.json"
+        url = re.sub(r'[/\\?%*:|\"<>\x7F\x00-\x1F]', '-', self.search_url)
+        file_name = f"listing_data/{self.name}{url}.json"
         if await os.path.isfile(file_name):
             async with aiofiles.open(file_name, mode="r") as f:
                 body = await f.read()
@@ -44,7 +46,8 @@ class MarketplacePlugin:
 
     async def save_listings(self, listings: list[MarketplaceListing]) -> None:
         """Saves the provided MarketplaceItems as processed."""
-        file_name = f"listing_data/{self.name}{self.search_term}.json"
+        url = re.sub(r'[/\\?%*:|\"<>\x7F\x00-\x1F]', '-', self.search_url)
+        file_name = f"listing_data/{self.name}{url}.json"
         async with aiofiles.open(file_name, mode="w") as f:
             await f.write(MarketplaceListing.schema().dumps(listings, many=True))
 
