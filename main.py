@@ -82,14 +82,14 @@ async def main():
                         ),
                         "embeds": embeds,
                     }
-                    try:
-                        await session.post(plugin_config["webhook_url"], json=body)
-                        print(
-                            f"[{plugin.name}] Sent message with {len(batch)} new listings."
-                        )
-                    except Exception as e:
-                        print(f"[{plugin.name}] Error while sending message: {e}")
-                        continue
+
+                    response = await session.post(
+                        plugin_config["webhook_url"], json=body
+                    )
+                    if not response.ok:
+                        plugin.log(f"Error while sending message: {response.status}")
+                    else:
+                        plugin.log(f"Sent message with {len(batch)} new listings.")
 
             await asyncio.sleep(config["interval"])
 
