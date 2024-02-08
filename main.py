@@ -32,11 +32,14 @@ async def main():
                 config = json.loads(config_text)
                 validate(instance=config, schema=schema)
         except FileNotFoundError:
-            return print("No config file found.")
+            print("No config file found.")
+            return
         except ValueError:
-            return print("Config file contains invalid JSON.")
+            print("Config file contains invalid JSON.")
+            return
         except ValidationError as e:
-            return print(f"Configuration is invalid.\n{e.message}")
+            print(f"Configuration is invalid.\n{e.message}")
+            return
 
         while True:
             for plugin_config in config["plugins"]:
@@ -46,12 +49,15 @@ async def main():
                     )
                     plugin_class = getattr(plugin_module, "Plugin")
                     plugin: MarketplacePlugin = plugin_class(
-                        session=session, search_term=plugin_config["search_term"]
+                        session=session, search_url=plugin_config["search_url"]
                     )
                 except ImportError as e:
                     print(f"Error loading plugin: {e}")
+                    continue
                 except AttributeError as e:
                     print(f"Error loading plugin class: {e}")
+                    continue
+
                 listings = await plugin.fetch_listings()
                 if not listings:
                     continue
@@ -83,7 +89,7 @@ async def main():
                         )
                     except Exception as e:
                         print(f"[{plugin.name}] Error while sending message: {e}")
-                        return
+                        continue
 
             await asyncio.sleep(config["interval"])
 

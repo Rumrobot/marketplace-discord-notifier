@@ -3,7 +3,7 @@
     "plugins": [
         {
             "name": "dba",
-            "search_term": "camera",
+            "search_url": "https://www.dba.dk/billede-og-lyd/analoge-kameraer/andre-analoge-kameraer/?sort=listingdate-desc",
             "webhook_url": "<webhook_url>",
             "message_content": "Hello World!"
         }

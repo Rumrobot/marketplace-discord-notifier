@@ -21,12 +21,12 @@ class MarketplaceListing:
 
 class MarketplacePlugin:
     def __init__(
-        self, name: str, color: int, session: ClientSession, search_term: str
+        self, name: str, color: int, session: ClientSession, search_url: str
     ) -> None:
         self.name = name
         self.color = color
         self.session = session
-        self.search_term = search_term
+        self.search_url = search_url
 
     async def fetch_listings(self) -> list[MarketplaceListing]:
         """Returns a list of new listings since last run."""
@@ -47,3 +47,6 @@ class MarketplacePlugin:
         file_name = f"listing_data/{self.name}{self.search_term}.json"
         async with aiofiles.open(file_name, mode="w") as f:
             await f.write(MarketplaceListing.schema().dumps(listings, many=True))
+
+    def log(self, message: str) -> None:
+        print(f"[{self.name}] {message}")

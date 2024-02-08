@@ -6,20 +6,18 @@ from .common import MarketplaceListing, MarketplacePlugin
 
 
 class Plugin(MarketplacePlugin):
-    def __init__(self, session: ClientSession, search_term: str) -> None:
+    def __init__(self, session: ClientSession, search_url: str) -> None:
         name = "DBA"
         color = 0x010C8D
-        super().__init__(name, color, session, search_term)
+        super().__init__(name, color, session, search_url)
 
     async def fetch_listings(self):
         existing_listings = await self.get_saved_listings()
         try:
-            response = await self.session.get(
-                f"https://www.dba.dk/soeg/?soeg={self.search_term}"
-            )
+            response = await self.session.get(self.search_url)
         except Exception as e:
-            print(f"[{self.name}] Error when requesting DBA site: {e}")
-            return
+            self.log(f"Error when requesting DBA site: {e}")
+            return []
         text = await response.text()
 
         # Parse HTML
@@ -32,8 +30,8 @@ class Plugin(MarketplacePlugin):
             try:
                 json_data = json.loads(text)
             except json.JSONDecodeError as e:
-                print(text)
-                print(f"[{self.name}] Error decoding JSON: {e}")
+                self.log(f"Error decoding JSON: {e}")
+                return []
 
             name = json_data.get("name")
             image_url = json_data.get("image").split("?")[0] + "?class=S1600X1600"

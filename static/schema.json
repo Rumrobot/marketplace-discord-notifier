@@ -17,23 +17,20 @@
                 "title": "A plugin.",
                 "required": [
                     "name",
-                    "search_term",
+                    "search_url",
                     "webhook_url"
                 ],
                 "properties": {
                     "name": {
                         "type": "string",
-                        "enum": ["dba"],
+                        "enum": ["dba", "ebay"],
                         "default": "dba",
                         "title": "The name of the plugin."
                     },
-                    "search_term": {
+                    "search_url": {
                         "type": "string",
                         "default": "",
-                        "title": "The search term to use.",
-                        "examples": [
-                            "camera"
-                        ]
+                        "title": "The url to search for listings. See README."
                     },
                     "webhook_url": {
                         "type": "string",
@@ -52,16 +49,16 @@
                     }
                 },
                 "examples": [{
-                    "name": "DBA",
-                    "search_term": "camera",
+                    "name": "dba",
+                    "search_url": "https://www.dba.dk/billede-og-lyd/analoge-kameraer/andre-analoge-kameraer/?sort=listingdate-desc",
                     "webhook_url": "webhook_url_here",
                     "message_content": "Hello World!"
                 }]
             },
             "examples": [
                 [{
-                    "name": "DBA",
-                    "search_term": "camera",
+                    "name": "dba",
+                    "search_url": "https://www.dba.dk/billede-og-lyd/analoge-kameraer/andre-analoge-kameraer/?sort=listingdate-desc",
                     "webhook_url": "webhook_url_here",
                     "message_content": "Hello World!"
                 }]
@@ -78,8 +75,8 @@
     },
     "examples": [{
         "plugins": [{
-            "name": "DBA",
-            "search_term": "camera",
+            "name": "dba",
+            "search_url": "https://www.dba.dk/billede-og-lyd/analoge-kameraer/andre-analoge-kameraer/?sort=listingdate-desc",
             "webhook_url": "webhook_url_here",
             "message_content": "Hello World!"
         }],
