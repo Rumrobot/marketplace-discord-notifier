@@ -27,14 +27,20 @@ class MarketplacePlugin:
         self.search_term = search_term
 
     async def fetch_listings(self) -> list[MarketplaceListing]:
-        """Returns a list of new listings since last run"""
+        """Returns a list of new listings since last run."""
         raise NotImplementedError(f"{self.name} plugin must implement `fetch_listings`")
 
     async def get_saved_listings(self) -> list[MarketplaceListing]:
-        """Returns a list of processed listings"""
+        """Returns a list of processed listings."""
         file_name = f"listing_data/{self.name}{self.search_term}.json"
         if await os.path.isfile(file_name):
             async with aiofiles.open(file_name, mode="r") as f:
                 return json.parse(await f.read())
         else:
             return []
+        
+    async def save_listings(self, listings: list[MarketplaceListing]) -> None:
+        """Saves the provided MarketplaceItems as processed."""
+        file_name = f"listing_data/{self.name}{self.search_term}.json"
+        async with aiofiles.open(file_name, mode="w") as f:
+            await f.write(json.dumps(listings))
