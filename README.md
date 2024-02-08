@@ -3,6 +3,7 @@ This is a simple script that notifies you when a new item is added to a search t
 Name | URL
 --- | ---
 Den Blå Avis | https://dba.dk
+
 It uses the [Discord Webhook API](https://discord.com/developers/docs/resources/webhook) to send a message to a channel of your choice.
 
 ## Installation
