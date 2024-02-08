@@ -1,5 +1,5 @@
 {
-    "$schema": "https://johnnyjth.com/schema/marketplace-discord-notifier.json",
+    "$schema": "https://raw.githubusercontent.com/Rumrobot/marketplace-discord-notifier/main/static/schema.json",
     "plugins": [
         {
             "name": "DBA",
@@ -7,5 +7,6 @@
             "webhook_url": "<webhook_url>",
             "message_content": "Hello World!"
         }
-    ]
+    ],
+    "interval": 60
 }
