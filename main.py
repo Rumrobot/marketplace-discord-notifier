@@ -1,8 +1,10 @@
 import asyncio
+from contextlib import suppress
 import importlib
+from itertools import zip_longest
 import json
 import aiofiles
-from aiofiles.os import rmdir
+from aiofiles import os
 
 from aiohttp import ClientSession
 from jsonschema import ValidationError, validate
@@ -11,7 +13,8 @@ from plugins.common import MarketplacePlugin
 
 
 async def main():
-    await rmdir("listing_data")
+    with suppress(FileExistsError):
+        await os.mkdir("listing_data")
 
     main_loop = True
     async with ClientSession(
@@ -36,17 +39,53 @@ async def main():
             return print(f"Configuration is invalid.\n{e.message}")
 
         while main_loop:
-            try:
-                plugin_module = importlib.import_module("plugins.dba")
-                plugin_class = getattr(plugin_module, "Plugin")
-                plugin: MarketplacePlugin = plugin_class(
-                    session=session, search_term="Test"
-                )
+            for plugin_config in config["plugins"]:
+                try:
+                    plugin_module = importlib.import_module(
+                        f"plugins.{plugin_config['name']}"
+                    )
+                    plugin_class = getattr(plugin_module, "Plugin")
+                    plugin: MarketplacePlugin = plugin_class(
+                        session=session, search_term=plugin_config["search_term"]
+                    )
+                except ImportError as e:
+                    print(f"Error loading plugin: {e}")
+                except AttributeError as e:
+                    print(f"Error loading plugin class: {e}")
                 listings = await plugin.fetch_listings()
-            except ImportError as e:
-                print(f"Error loading plugin: {e}")
-            except AttributeError as e:
-                print(f"Error loading plugin class: {e}")
+                if not listings:
+                    return
+
+                for batch in zip_longest(
+                    *[listings] * 10, fillvalue=None
+                ):  # Group new listings into chunks of 10 (max embeds in one message)
+                    embeds = []
+                    for listing in batch:
+                        embeds.append(
+                            {
+                                "color": plugin.color,
+                                "title": listing.name,
+                                "url": listing.url,
+                                "fields": [
+                                    {"name": "Price", "value": listing.price}
+                                ],
+                                "image": {"url": listing.image_url},
+                            }
+                        )
+                    body = {
+                        "content": plugin_config.get("message_content"),
+                        "embeds": embeds,
+                    }
+                    try:
+                        await session.post(
+                            plugin_config["webhook_url"], json=body
+                        )
+                        print(f"[{plugin.name}] Sent message with {len(batch)} new listings.")
+                    except Exception as e:
+                        print(f"[{plugin.name}] Error while sending message: {e}")
+                        return
+
+
 
             await asyncio.sleep(config["interval"])
 

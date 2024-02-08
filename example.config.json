@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/Rumrobot/marketplace-discord-notifier/main/static/schema.json",
     "plugins": [
         {
-            "name": "DBA",
+            "name": "dba",
             "search_term": "camera",
             "webhook_url": "<webhook_url>",
             "message_content": "Hello World!"
