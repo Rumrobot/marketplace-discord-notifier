@@ -1,0 +1,90 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "title": "Config Schema",
+    "required": [
+        "plugins",
+        "interval"
+    ],
+    "properties": {
+        "plugins": {
+            "type": "array",
+            "default": [],
+            "title": "The plugins to load.",
+            "items": {
+                "type": "object",
+                "default": {},
+                "title": "A plugin.",
+                "required": [
+                    "name",
+                    "search_term",
+                    "webhook_url"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "default": "",
+                        "title": "The name of the plugin.",
+                        "examples": [
+                            "DBA"
+                        ]
+                    },
+                    "search_term": {
+                        "type": "string",
+                        "default": "",
+                        "title": "The search term to use.",
+                        "examples": [
+                            "camera"
+                        ]
+                    },
+                    "webhook_url": {
+                        "type": "string",
+                        "default": "",
+                        "title": "The webhook_url to use.",
+                        "examples": [
+                            "webhook_url_here"
+                        ]
+                    },
+                    "message_content": {
+                        "type": "string",
+                        "title": "The message to send alongside the embed.",
+                        "examples": [
+                            "Hello World!"
+                        ]
+                    }
+                },
+                "examples": [{
+                    "name": "DBA",
+                    "search_term": "camera",
+                    "webhook_url": "webhook_url_here",
+                    "message_content": "Hello World!"
+                }]
+            },
+            "examples": [
+                [{
+                    "name": "DBA",
+                    "search_term": "camera",
+                    "webhook_url": "webhook_url_here",
+                    "message_content": "Hello World!"
+                }]
+            ]
+        },
+        "interval": {
+            "type": "integer",
+            "default": "",
+            "title": "The amount of seconds to wait between each run.",
+            "examples": [
+                "60"
+            ]
+        }
+    },
+    "examples": [{
+        "plugins": [{
+            "name": "DBA",
+            "search_term": "camera",
+            "webhook_url": "webhook_url_here",
+            "message_content": "Hello World!"
+        }],
+        "interval": 60
+    }]
+}

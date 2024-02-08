@@ -1,0 +1,11 @@
+{
+    "$schema": "https://johnnyjth.com/schema/marketplace-discord-notifier.json",
+    "plugins": [
+        {
+            "name": "DBA",
+            "search_term": "camera",
+            "webhook_url": "<webhook_url>",
+            "message_content": "Hello World!"
+        }
+    ]
+}
