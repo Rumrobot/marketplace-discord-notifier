@@ -23,7 +23,7 @@
                 "properties": {
                     "name": {
                         "type": "string",
-                        "enum": ["dba", "ebay"],
+                        "enum": ["dba", "ebay", "klenanzeigen"],
                         "default": "dba",
                         "title": "The name of the plugin."
                     },

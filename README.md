@@ -4,6 +4,7 @@ Name | URL
 --- | ---
 Den Blå Avis | https://dba.dk
 eBay | https://ebay.com
+Kleinanzeigen | https://kleinanzeigen.de
 
 It uses the [Discord Webhook API](https://discord.com/developers/docs/resources/webhook) to send a message to a channel of your choice.
 
@@ -33,6 +34,7 @@ Each plugin has the following fields:
 - `name`: The name of the plugin. This can be one of the following:
   - [`dba`](#dba)
   - [`ebay`](#ebay)
+  - [`kleinanzeigen`](#kleinanzeigen)
 - `search_url`: The URL of the search query you want to monitor. Plugin specific.
 - `webhook_url`: The URL of the Discord Webhook you want to send the message to.
 - `message_content`: The message you want to be sent to the Discord channel alongside the listings. 
@@ -51,3 +53,6 @@ It can also be a normal search query, for example: `https://www.dba.dk/soeg/?soe
 
 #### eBay
 For the `ebay` plugin, the `search_url` field should be the URL of the search query you want to monitor. For example, if you want to monitor new analogue cameras, the `search_url` field could be `https://www.ebay.com/sch/i.html?_nkw=analog+camera&_sop=10`. This means that the search query is `analog camera` and the listings are sorted by the newest first.
+
+#### Kleinanzeigen
+For the `kleinanzeigen` plugin, the `search_url` field should be the URL of the search query you want to monitor. For example, if you want to monitor new analogue cameras, the `search_url` field could be `https://www.kleinanzeigen.de/s-analog-kamera/k0`.
