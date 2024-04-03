@@ -60,6 +60,8 @@ async def main():
                     print(f"Error loading plugin class: {e}")
                     continue
 
+                print(f"Fetching listings for {plugin_config['name']}...")
+
                 listings = await plugin.fetch_listings()
                 if not listings:
                     continue
