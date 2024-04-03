@@ -54,17 +54,14 @@ async def main():
                         session=session, search_url=plugin_config["search_url"]
                     )
                 except ImportError as e:
-                    print(f"Error loading plugin: {e}")
+                    print(f"Error loading {plugin_config['name']} plugin: {e}")
                     continue
                 except AttributeError as e:
-                    print(f"Error loading plugin class: {e}")
+                    print(f"Error loading {plugin_config['name']} plugin class: {e}")
                     continue
-
-                print(f"Fetching listings for {plugin_config['name']}...")
 
                 listings = await plugin.fetch_listings()
                 if not listings:
-                    print(f"No listings found for {plugin_config['name']}.")
                     continue
 
                 for i, batch in enumerate(
