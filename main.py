@@ -64,6 +64,7 @@ async def main():
 
                 listings = await plugin.fetch_listings()
                 if not listings:
+                    print(f"No listings found for {plugin_config['name']}.")
                     continue
 
                 for i, batch in enumerate(
