@@ -41,6 +41,8 @@ async def main():
             print(f"Configuration is invalid.\n{e.message}")
             return
 
+        print("Configuration is valid.")
+
         while True:
             for plugin_config in config["plugins"]:
                 try:
